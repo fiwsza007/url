@@ -1,0 +1,33 @@
+services:
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: urlshort_api
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - JWT_SECRET=${JWT_SECRET:-supersecret_change_me}
+      - CLIENT_URL=http://localhost:8080
+      - DB_FILE=/app/data/data.sqlite
+    ports:
+      - "4001:4000"
+    volumes:
+      - sqlite_data:/app/data
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: urlshort_web
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+
+volumes:
+  sqlite_data:

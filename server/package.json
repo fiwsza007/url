@@ -1,0 +1,22 @@
+{
+  "name": "url-shortener-server",
+  "version": "1.0.0",
+  "description": "Express backend for URL shortener with custom slug, JWT auth, and SQLite storage",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "npx nodemon index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "better-sqlite3": "^9.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "nanoid": "^5.0.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

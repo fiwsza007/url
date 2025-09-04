@@ -1,0 +1,24 @@
+# Dependencies
+client/node_modules/
+server/node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+client/dist/
+client/.vite/
+client/.cache/
+
+# Env files (keep example only)
+server/.env
+server/.env.local
+client/.env
+client/.env.local
+
+# SQLite database file
+server/data.sqlite
+
+# OS junk
+.DS_Store
+Thumbs.db
