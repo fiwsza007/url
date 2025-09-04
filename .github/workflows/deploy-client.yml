@@ -37,7 +37,12 @@ jobs:
       - name: Build with VITE_API_BASE from repo secret
         env:
           VITE_API_BASE: ${{ secrets.PAGES_API_BASE }}
+          # สำหรับ Project Pages (https://USERNAME.github.io/REPO/)
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
         run: npm run build
+
+      - name: Add SPA fallback (404.html) for GitHub Pages
+        run: cp dist/index.html dist/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
