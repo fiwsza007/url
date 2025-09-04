@@ -35,12 +35,14 @@ jobs:
         run: npm ci
 
       - name: Build with VITE_API_BASE from repo secret
+        working-directory: client
+        run: npm run build
         env:
           VITE_API_BASE: ${{ secrets.PAGES_API_BASE }}
-          # ถ้าเป็น Project Pages -> https://USERNAME.github.io/REPO/
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
-        run: npm run build
-      - name: Add SPA fallback (404.html) for GitHub Pages
+
+      - name: Add SPA fallback 404.html
+        working-directory: client
         run: cp dist/index.html dist/404.html
 
       - name: Upload artifact
