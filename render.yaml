@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: urlshort-api
+    env: node
+    rootDir: server
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+
+    # Render จะกำหนด PORT ให้อัตโนมัติ (server/index.js รองรับผ่าน process.env.PORT แล้ว)
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        # ให้ Render สร้างค่า Secret แบบสุ่มอัตโนมัติ
+        generateValue: true
+      - key: CLIENT_URL
+        # อนุญาต Origin ของ GitHub Pages (origin ไม่ต้องมี /REPO)
+        value: https://fiwsza007.github.io
+      - key: DB_FILE
+        # เก็บ SQLite ไว้ในโฟลเดอร์ /data
+        value: /data/data.sqlite
+
+    # ต้องการให้ SQLite เก็บถาวร ให้ใช้ Persistent Disk (อาจต้องใช้แผนที่รองรับ Disk)
+    disk:
+      name: sqlite-data
+      mountPath: /data
+      sizeGB: 1
