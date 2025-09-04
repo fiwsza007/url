@@ -6,7 +6,7 @@ services:
       - NODE_ENV=production
       - PORT=4000
       - JWT_SECRET=${JWT_SECRET:-supersecret_change_me}
-      - CLIENT_URL=https://your-frontend.example.com
+      - CLIENT_URL=https://fiwsza007.github.io
       - DB_FILE=/app/data/data.sqlite
     ports:
       - "4000:4000"
