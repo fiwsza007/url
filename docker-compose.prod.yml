@@ -1,0 +1,18 @@
+services:
+  api:
+    image: ghcr.io/OWNER/REPO/urlshort-api:latest
+    container_name: urlshort_api
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - JWT_SECRET=${JWT_SECRET:-supersecret_change_me}
+      - CLIENT_URL=https://your-frontend.example.com
+      - DB_FILE=/app/data/data.sqlite
+    ports:
+      - "4000:4000"
+    volumes:
+      - sqlite_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  sqlite_data:

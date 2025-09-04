@@ -1,0 +1,37 @@
+name: Deploy API to Server via SSH
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "server/**"
+      - "docker-compose.prod.yml"
+      - ".github/workflows/deploy-api-ssh.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (for reference only)
+        uses: actions/checkout@v4
+
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script_stop: true
+          script: |
+            set -e
+            cd "${{ secrets.REMOTE_DIR }}"
+            echo "Logging in GHCR..."
+            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+            echo "Pull latest image..."
+            docker compose -f docker-compose.prod.yml pull api
+            echo "Recreate containers..."
+            docker compose -f docker-compose.prod.yml up -d
+            echo "Prune old images..."
+            docker image prune -f
