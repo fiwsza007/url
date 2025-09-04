@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { api } from '../api';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:4000';
+const SHORT_BASE = import.meta.env.VITE_SHORT_BASE || API_BASE;
 
 function formatDateISO(d) {
   if (!d) return '';
@@ -35,7 +36,8 @@ export default function Dashboard() {
 
   const email = localStorage.getItem('email') || '';
 
-  const shortBase = useMemo(() => API_BASE.replace(/\/+$/, ''), []);
+  // ใช้ SHORT_BASE สำหรับโชว์ลิงก์ย่อ (ตัด / ท้ายเผื่อมี)
+  const shortBase = useMemo(() => (SHORT_BASE || API_BASE).replace(/\/+$/, ''), [SHORT_BASE]);
 
   async function load() {
     setLoading(true);
