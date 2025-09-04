@@ -1,30 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { api } from '../api';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:4000';
-const SHORT_BASE = import.meta.env.VITE_SHORT_BASE || API_BASE;
-
-function formatDateISO(d) {
-  if (!d) return '';
-  const dt = new Date(d);
-  if (isNaN(dt.getTime())) return '';
-  // to local yyyy-MM-ddTHH:mm
-  const pad = n => `${n}`.padStart(2, '0');
-  const yyyy = dt.getFullYear();
-  const mm = pad(dt.getMonth() + 1);
-  const dd = pad(dt.getDate());
-  const hh = pad(dt.getHours());
-  const min = pad(dt.getMinutes());
-  return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
-}
-
-function isExpired(expiresAt) {
-  if (!expiresAt) return false;
-  const now = new Date();
-  const exp = new Date(expiresAt);
-  return !isNaN(exp.getTime()) && now > exp;
-}
-
 export default function Dashboard() {
   const [originalUrl, setOriginalUrl] = useState('');
   const [shortCode, setShortCode] = useState('');
@@ -174,14 +150,22 @@ export default function Dashboard() {
         ) : (
           <div className="space-y-4">
             {items.map(it => {
-              const shortUrl = `${shortBase}/${it.shortCode}`;
+              // ใช้ฐานเดิมที่มีอยู่แล้ว
+              const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:4000';
+              const shortBase = useMemo(() => API_BASE.replace(/\/+$/, ''), []);
               const expired = isExpired(it.expiresAt);
               return (
                 <div key={it.id} className="border rounded p-4">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                     <div>
                       <div className="font-medium">
-                        <a href={shortUrl} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+                        <a
+                          href={shortUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-blue-600 hover:underline"
+                          title={shortUrl}
+                        >
                           {shortUrl}
                         </a>
                         <button
